@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "Simulation": {
+      "title": "Simulation",
+      "description": "A saved state of a Strategos simulation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "generation": { "type": "integer" },
+        "scenarioId": { "type": "string" },
+        "agents": { "type": "array", "items": { "type": "object" } },
+        "populationHistory": { "type": "array", "items": { "type": "object" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["name", "generation", "scenarioId", "agents", "populationHistory", "createdAt", "createdBy"]
+    }
+  },
+  "firestore": {
+    "/simulations/{simulationId}": {
+      "schema": "Simulation",
+      "description": "Collection of saved simulations."
+    }
+  }
+}

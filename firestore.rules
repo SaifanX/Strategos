@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: simulations
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, 1-100 chars)
+    //   - generation: number (required, non-negative)
+    //   - scenarioId: string (required)
+    //   - agents: list (required, max 1000 items)
+    //   - populationHistory: list (required, max 1000 items)
+    //   - createdAt: timestamp (required)
+    //   - createdBy: string (required, matches auth.uid)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidSimulation(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.generation is number && data.generation >= 0 &&
+             data.scenarioId is string &&
+             data.agents is list && data.agents.size() <= 1000 &&
+             data.populationHistory is list && data.populationHistory.size() <= 1000 &&
+             data.createdAt is timestamp &&
+             data.createdBy == request.auth.uid;
+    }
+
+    match /simulations/{simulationId} {
+      allow read: if true; // Publicly readable for sharing
+      allow create: if isAuthenticated() && isValidSimulation(request.resource.data);
+      allow update: if isAuthenticated() && isOwner(resource.data.createdBy) && isValidSimulation(request.resource.data);
+      allow delete: if isAuthenticated() && isOwner(resource.data.createdBy);
+    }
+  }
+}
