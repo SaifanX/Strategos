@@ -163,8 +163,8 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             {[...Array(10)].map((_, i) => (
               <span key={i}>
                 [SYSTEM_LOG]: AGENT_ID_{Math.floor(Math.random() * 9999)} DEFECTED //
-                [SYSTEM_LOG]: POPULATION_EQUILIBRIUM_STABLE //
-                [SYSTEM_LOG]: EVOLUTION_PROTOCOL_ACTIVE //
+                [SYSTEM_LOG]: MADE BY SAIFAN - STUDENT //
+                [SYSTEM_LOG]: CALCULATING IVY ENTRANCE CHANCES //
                 [SYSTEM_LOG]: TRUST_INDEX_CALCULATING...
               </span>
             ))}
