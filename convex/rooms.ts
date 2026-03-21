@@ -73,7 +73,8 @@ export const joinRoom = mutation({
     if (room.players.includes(args.userId)) throw new Error("Already in room");
 
     const updatedPlayers = [...room.players, args.userId];
-    const isFull = updatedPlayers.length >= room.maxPlayers;
+    const roomMaxPlayers = room.maxPlayers ?? 2;
+    const isFull = updatedPlayers.length >= roomMaxPlayers;
     
     await ctx.db.patch(args.roomId, {
       players: updatedPlayers,
@@ -137,7 +138,8 @@ export const makeChoice = mutation({
     }
 
     const updatedChoices = [...round.choices, { userId: args.userId, choice: args.choice }];
-    const allMadeChoices = updatedChoices.length === room.players.length;
+    const roomMaxPlayers = room.maxPlayers ?? 2;
+    const allMadeChoices = updatedChoices.length === roomMaxPlayers;
 
     await ctx.db.patch(args.roundId, {
       choices: updatedChoices,
@@ -146,8 +148,11 @@ export const makeChoice = mutation({
 
     // Handle next round iteration
     if (allMadeChoices) {
-      if (room.currentRound < room.totalRounds) {
-        const nextRoundNum = room.currentRound + 1;
+      const currentRound = room.currentRound ?? 1;
+      const totalRounds = room.totalRounds ?? 1;
+      
+      if (currentRound < totalRounds) {
+        const nextRoundNum = currentRound + 1;
         await ctx.db.patch(room._id, { currentRound: nextRoundNum });
         await ctx.db.insert("rounds", {
           roomId: room._id,

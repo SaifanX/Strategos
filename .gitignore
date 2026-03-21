@@ -3,6 +3,17 @@ build/
 dist/
 coverage/
 .DS_Store
+Thumbs.db
 *.log
 .env*
+.agents
 !.env.example
+
+# IDEs and local configs
+.vscode/
+.idea/
+*.local
+
+# Convex generated files
+# (Optional: uncomment if you prefer to keep the repo clean of generated JS/TS)
+# convex/_generated/
