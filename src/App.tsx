@@ -10,6 +10,9 @@ import { SCENARIOS } from './types';
 import { Colosseum } from './components/Colosseum';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { About } from './pages/About';
+import { Auth } from './pages/Auth';
+import { Lobby } from './pages/Lobby';
+import { MultiplayerRoom } from './pages/MultiplayerRoom';
 
 function useDocumentTitle() {
   const location = useLocation();
@@ -332,6 +335,21 @@ export default function App() {
               exit={{ opacity: 0 }}
             >
               <About />
+            </motion.div>
+          } />
+          <Route path="/auth" element={
+            <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <Auth />
+            </motion.div>
+          } />
+          <Route path="/lobby" element={
+            <motion.div key="lobby" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
+              <Lobby />
+            </motion.div>
+          } />
+          <Route path="/room/:id" element={
+            <motion.div key="room" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
+              <MultiplayerRoom />
             </motion.div>
           } />
         </Routes>

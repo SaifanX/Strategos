@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { User, Shield, Terminal, Code, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import avatarImg from '../assets/avatar.png';
 
 export const About: React.FC = () => {
@@ -91,6 +91,24 @@ export const About: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Funnel CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-white/10">
+            <Link 
+              to="/auth"
+              className="flex-1 px-6 py-4 border border-jet-orange/30 bg-jet-orange/10 hover:bg-jet-orange hover:text-white transition-all text-center group"
+            >
+              <span className="text-xs font-bold uppercase tracking-widest text-jet-orange group-hover:text-white">Join Multiplayer Arena</span>
+            </Link>
+            <a 
+              href="https://github.com/saifanx/strategos"
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 px-6 py-4 border border-white/20 hover:border-white transition-all text-center group"
+            >
+              <span className="text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white">Star The Project</span>
+            </a>
           </div>
         </div>
 

@@ -360,18 +360,41 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
         >
           <div className="space-y-4">
             <span className="font-mono text-[10px] text-white/50 uppercase tracking-[0.8em] drop-shadow-md">Final_Stage</span>
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">Ready to <br />Begin?</h2>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] mb-8">Ready to <br />Begin?</h2>
           </div>
 
+        <div className="flex flex-col md:flex-row gap-6 mt-8">
           <button
             onClick={onEnter}
-            className="group relative px-16 py-6 border border-white/20 hover:border-jet-orange transition-all overflow-hidden"
+            className="group relative px-12 py-5 border border-white/20 hover:border-jet-orange transition-all overflow-hidden"
           >
             <div className="absolute inset-0 bg-jet-orange translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            <span className="relative z-10 font-bold uppercase tracking-[0.3em] text-sm group-hover:text-white">
-              Enter_The_Arena
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm group-hover:text-white flex items-center gap-2">
+              <Cpu size={18} /> Run_Local_Simulation
             </span>
           </button>
+
+          <a
+            href="/auth"
+            className="group relative px-12 py-5 border border-white/20 bg-white/5 hover:border-blue-500 transition-all overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm text-white flex items-center gap-2">
+              <Shield size={18} /> Join_Multiplayer
+            </span>
+          </a>
+
+          <a
+            href="https://github.com/saifanx/strategos"
+            target="_blank"
+            rel="noreferrer"
+            className="group relative px-12 py-5 border border-white/20 hover:border-white transition-all overflow-hidden"
+          >
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm text-white/60 group-hover:text-white transition-colors flex items-center gap-2">
+              Star_Repo
+            </span>
+          </a>
+        </div>
         </motion.div>
 
         {/* Decorative Elements */}

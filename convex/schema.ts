@@ -19,4 +19,35 @@ export default defineSchema({
     totalDefections: v.number(),
     lastUpdated: v.number(),
   }),
+  
+  // Custom Multiplayer Auth Tables 
+  // TODO: Future: switch to official Auth provider (e.g. GitHub OAuth via Clerk/Convex Auth)
+  users: defineTable({
+    username: v.string(),
+    passwordHash: v.string(), // Or authProviderId
+  }).index("by_username", ["username"]),
+  
+  rooms: defineTable({
+    roomName: v.string(),
+    hostId: v.id("users"),
+    status: v.string(), // "waiting", "in_progress", "finished"
+    players: v.array(v.id("users")),
+    
+    // NEW ADVANCED MULTIPLAYER FIELDS
+    gameType: v.optional(v.string()), // "prisoners_dilemma", "stag_hunt", "commons", "custom"
+    maxPlayers: v.optional(v.number()),
+    totalRounds: v.optional(v.number()),
+    currentRound: v.optional(v.number()),
+    customRules: v.optional(v.any()), // flexible object for custom game matrices/names
+  }),
+  
+  rounds: defineTable({
+    roomId: v.id("rooms"),
+    roundNumber: v.number(),
+    status: v.string(), // "waiting_for_choices", "completed"
+    choices: v.array(v.object({
+      userId: v.id("users"),
+      choice: v.string(), // e.g., "COOPERATE", "DEFECT", or custom option
+    })),
+  }),
 });
