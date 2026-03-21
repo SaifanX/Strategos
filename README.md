@@ -1,4 +1,10 @@
 # STRATEGOS // Strategic Game Theory Laboratory
+[![Netlify Status](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://strategos1.netlify.app/)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Convex](https://img.shields.io/badge/Convex-FF7547?style=for-the-badge&logo=convex&logoColor=white)
+
+**[🔴 ACCESS THE MAIN APP: Access the Strategos Engine](https://strategos1.netlify.app/)**
 
 > A high-performance, interactive simulation engine exploring the intersection of Game Theory, Evolutionary Biology, and Web Architecture.
 
@@ -19,6 +25,19 @@ Strategos is a deterministic simulation environment designed to visualize comple
 * **Evolutionary Setups:** Pre-configured environments (Balanced Ecosystem, Aggressive Population, Cooperative Start) to test the viability of altruism vs. defection.
 * **Real-time Analytics:** Integrated dashboard for tracking population history and generation lifecycles.
 * **Colosseum Mode:** Distributed backend processing via Convex for persistent state testing.
+
+  ## The Architect
+
+**Saifan** *A 14-year-old developer and student based in Bangalore, India.*
+
+Strategos is not just a standalone project; it is a manifestation of a broader directive toward universal competence (Polymathy). It serves as a practical crucible for integrating Game Theory, Systems Thinking, and high-performance Web Architecture into a cohesive utility.
+
+My engineering philosophy prioritizes order, strategy, and brutal rationality. I do not build for comfort; I optimize for scale and execution.
+
+* **Capabilities:** Full-Stack Architecture, Algorithmic Optimization, AI Integration.
+* **Operating Thesis:** Drive high-agency output through strict personal systems and discipline.
+
+[GitHub](https://github.com/saifanx) | [Access the App](https://strategos1.netlify.app/)
 
 ## Deployment Protocol
 
