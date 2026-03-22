@@ -1,12 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from 'motion/react';
 import { ArrowDown, Shield, Zap, Target, Cpu, ChevronRight, Info, Fingerprint } from 'lucide-react';
-// @ts-ignore
-import { useQuery } from 'convex/react';
-// @ts-ignore
-import { api } from '../../convex/_generated/api';
-import { Link } from 'react-router-dom';
 import { Hero3DScene } from './Hero3DScene';
+import { Link } from 'react-router-dom';
 
 interface HeroProps {
   onEnter: () => void;
@@ -32,6 +28,21 @@ const TypewriterText = ({ text }: { text: string }) => {
   return <span ref={ref}>{displayedText}</span>;
 };
 
+const ProgressBit = ({ i, smoothScroll }: { i: number, smoothScroll: any }) => {
+  const scaleY = useTransform(smoothScroll, [i * 0.2, (i + 1) * 0.2], [0, 1]);
+  return (
+    <motion.div
+      className="w-1 h-8 bg-white/10 relative overflow-hidden"
+      initial={false}
+    >
+      <motion.div
+        className="absolute inset-0 bg-jet-orange origin-top"
+        style={{ scaleY }}
+      />
+    </motion.div>
+  );
+};
+
 export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
@@ -51,6 +62,13 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  const [systemLogs, setSystemLogs] = useState<string[]>([]);
+
+  useEffect(() => {
+    const logs = [...Array(10)].map(() => `AGENT_ID_${Math.floor(Math.random() * 9999)} DEFECTED // MADE BY SAIFAN - STUDENT // CALCULATING IVY ENTRANCE CHANCES // TRUST_INDEX_CALCULATING...`);
+    setSystemLogs(logs);
+  }, []);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -69,40 +87,63 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
       id: 'T4T',
       name: 'Tit-for-Tat',
       desc: 'Starts with cooperation, then replicates the opponent\'s previous move. The most successful balanced strategy.',
+      coopRate: '95%',
+      risk: 'Controlled',
+      archetype: 'The Mirror',
       color: 'text-[#00FFCC]',
       bg: 'bg-[#00FFCC]/10'
     },
     {
       id: 'AD',
-      name: 'Always Defect',
-      desc: 'Never cooperates. Exploits trust but eventually creates a wasteland where no one wins.',
+      name: 'Machiavelli',
+      desc: 'Never cooperates. Exploits trust but eventually creates a wasteland where no one wins by destroying the common good.',
+      coopRate: '0%',
+      risk: 'Extreme',
+      archetype: 'The Predator',
       color: 'text-[#FF4500]',
       bg: 'bg-[#FF4500]/10'
     },
     {
       id: 'AC',
-      name: 'Always Cooperate',
-      desc: 'The saint. Essential for growth, but vulnerable to exploitation by defectors.',
+      name: 'Altruist',
+      desc: 'The saint. Essential for growth, but vulnerable to exploitation. It maintains unconditional trust regardless of cost.',
+      coopRate: '100%',
+      risk: 'Low',
+      archetype: 'The Saint',
       color: 'text-white',
       bg: 'bg-white/10'
     },
     {
       id: 'GR',
       name: 'Grudger',
-      desc: 'Cooperates until the opponent defects once. After that, it never cooperates again.',
+      desc: 'Cooperates until the opponent defects once. After that, it never cooperates again. Forgiveness is not in its code.',
+      coopRate: '90%',
+      risk: 'Moderate',
+      archetype: 'The Avenger',
       color: 'text-[#FFCC00]',
       bg: 'bg-[#FFCC00]/10'
     },
     {
       id: 'PV',
       name: 'Pavlov',
-      desc: 'Win-Stay, Lose-Shift. Repeats its last move if it resulted in a high payoff, otherwise switches.',
+      desc: 'Win-Stay, Lose-Shift. An opportunistic adapter that continues success and pivots away from failure instantly.',
+      coopRate: '75%',
+      risk: 'High',
+      archetype: 'The Opportunist',
       color: 'text-[#FF00FF]',
       bg: 'bg-[#FF00FF]/10'
+    },
+    {
+      id: 'RD',
+      name: 'Chaos',
+      desc: 'The wildcard. Makes decisions based on pure entropy, making it impossible to predict or manipulate effectively.',
+      coopRate: '50%',
+      risk: 'Unpredictable',
+      archetype: 'The Anomaly',
+      color: 'text-white/40',
+      bg: 'bg-white/5'
     }
   ];
-
-  const landingPlayers = useQuery(api.rooms.getLandingPlayers);
 
   const payoffExplanations: Record<string, string> = {
     'CC': 'Mutual Cooperation: Both gain a stable reward (+3). The foundation of civilization.',
@@ -129,18 +170,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
       {/* Progress Indicator - Sticky Left */}
       <div className="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4">
         {[0, 1, 2, 3, 4].map((i) => (
-          <motion.div
-            key={i}
-            className="w-1 h-8 bg-white/10 relative overflow-hidden"
-            initial={false}
-          >
-            <motion.div
-              className="absolute inset-0 bg-jet-orange origin-top"
-              style={{
-                scaleY: useTransform(smoothScroll, [i * 0.2, (i + 1) * 0.2], [0, 1])
-              }}
-            />
-          </motion.div>
+          <ProgressBit key={i} i={i} smoothScroll={smoothScroll} />
         ))}
       </div>
 
@@ -194,13 +224,8 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             className="flex gap-12 whitespace-nowrap font-mono text-[8px] text-white/20 uppercase tracking-widest"
           >
-            {[...Array(10)].map((_, i) => (
-              <span key={i}>
-                [SYSTEM_LOG]: AGENT_ID_{Math.floor(Math.random() * 9999)} DEFECTED //
-                [SYSTEM_LOG]: MADE BY SAIFAN - STUDENT //
-                [SYSTEM_LOG]: CALCULATING IVY ENTRANCE CHANCES //
-                [SYSTEM_LOG]: TRUST_INDEX_CALCULATING...
-              </span>
+            {systemLogs.map((log, i) => (
+              <span key={i}>{log}</span>
             ))}
           </motion.div>
         </div>
@@ -310,55 +335,44 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl h-full min-h-[300px]"
+              className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl h-full min-h-[400px]"
             >
               <div className="space-y-6">
-                <div className={`w-12 h-12 ${strat.bg} flex items-center justify-center border border-white/10`}>
-                  <span className={`font-mono text-xs font-bold ${strat.color}`}>{strat.id}</span>
+                <div className="flex justify-between items-start">
+                  <div className={`w-12 h-12 ${strat.bg} flex items-center justify-center border border-white/10`}>
+                    <span className={`font-mono text-xs font-bold ${strat.color}`}>{strat.id}</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[8px] font-mono text-white/20 uppercase tracking-widest">Archetype</div>
+                    <div className="text-[10px] font-bold text-jet-orange">{strat.archetype}</div>
+                  </div>
                 </div>
+                
                 <h3 className="text-3xl font-bold tracking-tighter uppercase">{strat.name}</h3>
-                <p className="text-white/40 text-sm leading-relaxed uppercase tracking-tight">{strat.desc}</p>
+                <p className="text-white/40 text-[11px] leading-relaxed uppercase tracking-tight">{strat.desc}</p>
+                
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                  <div>
+                    <div className="text-[8px] font-mono text-white/20 uppercase">Coop_Rate</div>
+                    <div className="text-sm font-bold">{strat.coopRate}</div>
+                  </div>
+                  <div>
+                    <div className="text-[8px] font-mono text-white/20 uppercase">Risk_Level</div>
+                    <div className="text-sm font-bold truncate">{strat.risk}</div>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 text-[8px] font-mono text-white/20 uppercase tracking-widest group-hover:text-jet-orange transition-colors mt-8">
-                <span>Core_Logic_Locked</span>
+              <div className="flex items-center justify-between mt-8">
+                <div className="flex items-center gap-2 text-[8px] font-mono text-white/20 uppercase tracking-widest">
+                  <Fingerprint size={10} />
+                  <span>Dossier_Verified</span>
+                </div>
+                <div className="text-[8px] font-mono text-jet-orange animate-pulse uppercase tracking-widest">Active_Scan...</div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* Live Legends Section */}
-        {landingPlayers && landingPlayers.length > 0 && (
-          <div className="mt-24">
-            <div className="mb-12">
-               <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">[Live_Strategic_Dossiers]</span>
-               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase mt-2">Current Legends</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {landingPlayers.map((player: any, i: number) => (
-                <Link 
-                  key={player._id} 
-                  to={`/player/${player.userId}`}
-                  className="p-6 border border-white/5 bg-white/2 hover:bg-white/5 hover:border-jet-orange/30 transition-all rounded-xl group"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                     <div className="w-10 h-10 bg-black border border-white/10 flex items-center justify-center rounded-lg group-hover:border-jet-orange/50">
-                        <Fingerprint className="text-white/40 group-hover:text-jet-orange" size={18} />
-                     </div>
-                     <div className="font-bold uppercase tracking-tight truncate flex-1">{player.username}</div>
-                  </div>
-                  <div className="flex justify-between items-end">
-                     <div>
-                        <div className="text-[8px] font-mono text-white/20 uppercase">Resonance</div>
-                        <div className="text-lg font-bold text-jet-orange">{player.resonance}%</div>
-                     </div>
-                     <div className="text-[9px] font-mono text-white/40 uppercase group-hover:text-white transition-colors">View_Dossier ↗</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
 
       {/* Section 4: The Evolution */}

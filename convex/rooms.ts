@@ -181,7 +181,7 @@ export const makeChoice = mutation({
           if (player && !player.isBot) {
             // Simple scoring: count cooperations vs defections
             let score = 0;
-            let wins = 0;
+            const wins = 0;
             allRoomRounds.forEach(r => {
               const c = r.choices.find(ch => ch.userId === playerId);
               if (c?.choice === "COOPERATE") score += 5;

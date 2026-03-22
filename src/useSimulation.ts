@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Agent, SimulationState, SCENARIOS, StrategyType, BehaviorType, ScenarioId } from './types';
+import { getStrategy } from './engine/Registry';
 
 export const useSimulation = () => {
   const [state, setState] = useState<SimulationState>({
@@ -15,23 +16,7 @@ export const useSimulation = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const getMove = (agent: Agent): StrategyType => {
-    switch (agent.behavior) {
-      case 'ALWAYS_COOPERATE': return 'COOPERATE';
-      case 'ALWAYS_DEFECT': return 'DEFECT';
-      case 'RANDOM': return Math.random() > 0.5 ? 'COOPERATE' : 'DEFECT';
-      case 'TIT_FOR_TAT':
-        return agent.opponentLastMove || 'COOPERATE';
-      case 'GRUDGER':
-        return agent.hasBeenBetrayed ? 'DEFECT' : 'COOPERATE';
-      case 'PAVLOV':
-        if (!agent.lastMove || !agent.opponentLastMove) return 'COOPERATE';
-        return agent.opponentLastMove === 'COOPERATE' ? agent.lastMove : (agent.lastMove === 'COOPERATE' ? 'DEFECT' : 'COOPERATE');
-      case 'TIT_FOR_TWO_TATS':
-        return agent.opponentConsecutiveDefects >= 2 ? 'DEFECT' : 'COOPERATE';
-      case 'SNEAKY_COOPERATOR':
-        return Math.random() > 0.1 ? 'COOPERATE' : 'DEFECT';
-      default: return 'COOPERATE';
-    }
+    return getStrategy(agent.behavior).execute(agent);
   };
 
   const initAgents = useCallback((count: number = 1000, distribution?: Record<BehaviorType, number>) => {
@@ -99,7 +84,7 @@ export const useSimulation = () => {
       const behaviors: BehaviorType[] = ['ALWAYS_COOPERATE', 'ALWAYS_DEFECT', 'TIT_FOR_TAT', 'GRUDGER', 'RANDOM', 'PAVLOV', 'TIT_FOR_TWO_TATS', 'SNEAKY_COOPERATOR'];
 
       // Move agents slightly
-      let newAgents = prev.agents.map(a => {
+      const newAgents = prev.agents.map(a => {
         let nx = a.position[0] + (Math.random() - 0.5) * 0.8; // Increased movement speed
         let nz = a.position[2] + (Math.random() - 0.5) * 0.8;
         
