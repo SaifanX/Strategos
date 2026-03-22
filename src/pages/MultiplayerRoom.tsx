@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 // @ts-ignore
 import { useQuery, useMutation } from 'convex/react';
 // @ts-ignore
@@ -199,7 +199,9 @@ export function MultiplayerRoom() {
                   const p = room.playerDetails.find((pd: any) => pd._id === c.userId);
                   return (
                     <div key={c.userId} className="flex justify-between text-[10px]">
-                      <span className="text-white/60 truncate max-w-[100px]">{p?.username || 'Unknown'}</span>
+                      <Link to={`/player/${c.userId}`} className="text-white/60 hover:text-jet-orange transition-colors truncate max-w-[100px]">
+                        {p?.username || 'Unknown'}
+                      </Link>
                       <span className={c.choice === optionA ? "text-blue-400" : "text-jet-orange"}>{c.choice}</span>
                     </div>
                   );
@@ -295,7 +297,9 @@ export function MultiplayerRoom() {
                 return (
                   <div key={p._id} className={`p-6 border rounded-xl ${isWinner ? 'border-jet-orange bg-jet-orange/10 shadow-[0_0_20px_rgba(255,69,0,0.15)]' : 'border-white/10 bg-white/5'}`}>
                     <div className="flex justify-between items-center mb-4">
-                      <div className="font-bold uppercase tracking-widest text-lg">{p.username}</div>
+                      <Link to={`/player/${p._id}`} className="font-bold uppercase tracking-widest text-lg hover:text-jet-orange transition-colors">
+                        {p.username}
+                      </Link>
                       {isWinner && <div className="text-[10px] uppercase bg-jet-orange text-white px-2 py-0.5 rounded-sm">Victor</div>}
                     </div>
                     <div className="space-y-4">

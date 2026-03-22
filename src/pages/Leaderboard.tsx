@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // @ts-ignore
 import { useQuery } from 'convex/react';
 // @ts-ignore
@@ -42,7 +43,9 @@ export function Leaderboard() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-lg uppercase tracking-tight">{leader.username}</span>
+                  <Link to={`/player/${leader.userId}`} className="font-bold text-lg uppercase tracking-tight hover:text-jet-orange transition-colors">
+                    {leader.username}
+                  </Link>
                   {i === 0 && <Medal size={14} className="text-jet-orange" />}
                 </div>
                 <div className="text-[9px] font-mono text-white/40 uppercase tracking-widest">

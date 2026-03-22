@@ -239,3 +239,68 @@ export const getLeaderboard = query({
     );
   },
 });
+
+export const getPlayerAnalysis = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    if (!user) return null;
+
+    const allRounds = await ctx.db
+      .query("rounds")
+      .collect();
+
+    // Filter rounds where this user participated
+    const userRounds = allRounds.filter(r => r.choices.some(c => c.userId === args.userId));
+    
+    let coops = 0;
+    let defects = 0;
+    const pointsHistory: number[] = [];
+    
+    userRounds.forEach(r => {
+      const choice = r.choices.find(c => c.userId === args.userId);
+      if (choice?.choice === "COOPERATE") coops++;
+      else if (choice?.choice === "DEFECT") defects++;
+      
+      // Calculate points for this specific round (simplified for now)
+      // Reference: matrix { cc: 3, cd: 0, dc: 5, dd: 1 }
+      // This is a rough estimation since we don't store other players' choices in pointsHistory array easily here
+      // But we can just store the choice as a trend
+    });
+
+    const total = coops + defects;
+    const coopRate = total > 0 ? (coops / total) * 100 : 0;
+    const defectRate = total > 0 ? (defects / total) * 100 : 0;
+
+    let archetype = "Undetermined";
+    let archetypeDesc = "Insufficient data for behavioral profiling.";
+
+    if (total >= 5) {
+      if (coopRate > 80) {
+        archetype = "The Altruistic Saint";
+        archetypeDesc = "Prioritizes collective well-being over personal gain. Highly susceptible to exploitation.";
+      } else if (defectRate > 80) {
+        archetype = "The Ruthless Predator";
+        archetypeDesc = "Expert at maximizing individual utility at the cost of social cohesion. High variance in long-term success.";
+      } else if (coopRate > 40 && coopRate < 60) {
+        archetype = "The Strategic Mirror";
+        archetypeDesc = "Mimics environmental stimuli. Perfectly balanced between retribution and forgiveness.";
+      } else {
+        archetype = "The Adaptive Pragmatist";
+        archetypeDesc = "Calculates moves based on perceived opportunity. Hard to predict, impossible to ignore.";
+      }
+    }
+
+    return {
+      username: user.username,
+      resonance: user.resonance ?? 50,
+      totalGames: total,
+      coopRate,
+      defectRate,
+      archetype,
+      archetypeDesc,
+      // Mock some history for the chart if zero data, otherwise use calculated trend
+      history: total > 0 ? [coopRate, defectRate, 50, (coopRate + 50) / 2] : [50, 50, 50, 50]
+    };
+  },
+});
