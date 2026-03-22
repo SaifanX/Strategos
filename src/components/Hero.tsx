@@ -1,6 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from 'motion/react';
-import { ArrowDown, Shield, Zap, Target, Cpu, ChevronRight, Info } from 'lucide-react';
+import { ArrowDown, Shield, Zap, Target, Cpu, ChevronRight, Info, Fingerprint } from 'lucide-react';
+// @ts-ignore
+import { useQuery } from 'convex/react';
+// @ts-ignore
+import { api } from '../../convex/_generated/api';
+import { Link } from 'react-router-dom';
 import { Hero3DScene } from './Hero3DScene';
 
 interface HeroProps {
@@ -87,8 +92,17 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
       desc: 'Cooperates until the opponent defects once. After that, it never cooperates again.',
       color: 'text-[#FFCC00]',
       bg: 'bg-[#FFCC00]/10'
+    },
+    {
+      id: 'PV',
+      name: 'Pavlov',
+      desc: 'Win-Stay, Lose-Shift. Repeats its last move if it resulted in a high payoff, otherwise switches.',
+      color: 'text-[#FF00FF]',
+      bg: 'bg-[#FF00FF]/10'
     }
   ];
+
+  const landingPlayers = useQuery(api.rooms.getLandingPlayers);
 
   const payoffExplanations: Record<string, string> = {
     'CC': 'Mutual Cooperation: Both gain a stable reward (+3). The foundation of civilization.',
@@ -288,7 +302,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {strategies.map((strat, i) => (
             <motion.div
               key={strat.id}
@@ -296,7 +310,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl h-full min-h-[350px]"
+              className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl h-full min-h-[300px]"
             >
               <div className="space-y-6">
                 <div className={`w-12 h-12 ${strat.bg} flex items-center justify-center border border-white/10`}>
@@ -307,12 +321,44 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               </div>
 
               <div className="flex items-center gap-2 text-[8px] font-mono text-white/20 uppercase tracking-widest group-hover:text-jet-orange transition-colors mt-8">
-                <span>Analyze_Pattern</span>
-                <ChevronRight size={10} />
+                <span>Core_Logic_Locked</span>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Live Legends Section */}
+        {landingPlayers && landingPlayers.length > 0 && (
+          <div className="mt-24">
+            <div className="mb-12">
+               <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">[Live_Strategic_Dossiers]</span>
+               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase mt-2">Current Legends</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {landingPlayers.map((player: any, i: number) => (
+                <Link 
+                  key={player._id} 
+                  to={`/player/${player.userId}`}
+                  className="p-6 border border-white/5 bg-white/2 hover:bg-white/5 hover:border-jet-orange/30 transition-all rounded-xl group"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                     <div className="w-10 h-10 bg-black border border-white/10 flex items-center justify-center rounded-lg group-hover:border-jet-orange/50">
+                        <Fingerprint className="text-white/40 group-hover:text-jet-orange" size={18} />
+                     </div>
+                     <div className="font-bold uppercase tracking-tight truncate flex-1">{player.username}</div>
+                  </div>
+                  <div className="flex justify-between items-end">
+                     <div>
+                        <div className="text-[8px] font-mono text-white/20 uppercase">Resonance</div>
+                        <div className="text-lg font-bold text-jet-orange">{player.resonance}%</div>
+                     </div>
+                     <div className="text-[9px] font-mono text-white/40 uppercase group-hover:text-white transition-colors">View_Dossier ↗</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Section 4: The Evolution */}

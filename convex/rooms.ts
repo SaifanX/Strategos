@@ -304,3 +304,26 @@ export const getPlayerAnalysis = query({
     };
   },
 });
+
+export const getLandingPlayers = query({
+  args: {},
+  handler: async (ctx) => {
+    const topLeaderboard = await ctx.db
+      .query("leaderboard")
+      .order("desc")
+      .take(4);
+
+    const playersWithDetails = await Promise.all(
+      topLeaderboard.map(async (l) => {
+        const user = await ctx.db.get(l.userId);
+        return {
+          ...l,
+          username: user?.username || "Unknown",
+          resonance: user?.resonance || 50,
+        };
+      })
+    );
+
+    return playersWithDetails;
+  },
+});
