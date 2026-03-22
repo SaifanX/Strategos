@@ -34,3 +34,10 @@ export const getStrategy = (behavior: BehaviorType): IStrategy => {
   }
   return strategy;
 };
+
+/**
+ * Returns all registered behavior keys.
+ */
+export const getRegisteredBehaviors = (): BehaviorType[] => {
+  return Object.keys(StrategyRegistry) as BehaviorType[];
+};

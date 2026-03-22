@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Agent, SimulationState, SCENARIOS, StrategyType, BehaviorType, ScenarioId } from './types';
-import { getStrategy } from './engine/Registry';
+import { getStrategy, getRegisteredBehaviors } from './engine/Registry';
 
 export const useSimulation = () => {
   const [state, setState] = useState<SimulationState>({
@@ -20,7 +20,7 @@ export const useSimulation = () => {
   };
 
   const initAgents = useCallback((count: number = 1000, distribution?: Record<BehaviorType, number>) => {
-    const behaviors: BehaviorType[] = ['ALWAYS_COOPERATE', 'ALWAYS_DEFECT', 'TIT_FOR_TAT', 'GRUDGER', 'RANDOM', 'PAVLOV', 'TIT_FOR_TWO_TATS', 'SNEAKY_COOPERATOR'];
+    const behaviors = getRegisteredBehaviors();
     
     let newAgents: Agent[] = [];
     const areaSize = 30; // Larger area for more agents
@@ -81,7 +81,7 @@ export const useSimulation = () => {
     setState(prev => {
       const areaSize = 30;
       const gridSize = 2; // Size of spatial grid cell
-      const behaviors: BehaviorType[] = ['ALWAYS_COOPERATE', 'ALWAYS_DEFECT', 'TIT_FOR_TAT', 'GRUDGER', 'RANDOM', 'PAVLOV', 'TIT_FOR_TWO_TATS', 'SNEAKY_COOPERATOR'];
+      const behaviors = getRegisteredBehaviors();
 
       // Move agents slightly
       const newAgents = prev.agents.map(a => {
