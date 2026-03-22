@@ -1,11 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from 'motion/react';
 import { ArrowDown, Shield, Zap, Target, Cpu, ChevronRight, Info } from 'lucide-react';
 import { Hero3DScene } from './Hero3DScene';
 
 interface HeroProps {
   onEnter: () => void;
 }
+
+const TypewriterText = ({ text }: { text: string }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  useEffect(() => {
+    if (!isInView) return;
+    
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, i));
+      i++;
+      if (i > text.length) clearInterval(interval);
+    }, 15);
+    return () => clearInterval(interval);
+  }, [text, isInView]);
+
+  return <span ref={ref}>{displayedText}</span>;
+};
 
 export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -142,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em] mb-6 block drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
               [Transmission_Start]
             </span>
-            <h1 className="text-7xl md:text-9xl font-bold tracking-tighter uppercase leading-[0.8] mb-8 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+            <h1 className="text-5xl md:text-9xl font-bold tracking-tighter uppercase leading-[0.8] mb-8 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
               Conflict is <br />
               <span className="text-white/50">Calculated.</span>
             </h1>
@@ -188,7 +208,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ margin: "-100px" }}
             transition={{ duration: 0.8 }}
-            className="space-y-8 bg-black/40 backdrop-blur-md p-8 rounded-3xl border border-white/10 drop-shadow-xl"
+            className="space-y-6 md:space-y-8 bg-black/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/10 drop-shadow-xl"
             style={{
               opacity: useTransform(smoothScroll, [0.1, 0.2, 0.35, 0.45], [0, 1, 1, 0])
             }}
@@ -207,8 +227,8 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
                 <Info className="text-jet-orange shrink-0 mt-1" size={20} />
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-white/40">Outcome_Analysis</h4>
-                  <p className="text-sm text-white/80 leading-relaxed min-h-[3em]">
-                    {hoveredCell ? payoffExplanations[hoveredCell] : "Hover over the matrix cells to analyze the mathematical consequences of each interaction."}
+                  <p className="text-sm text-white/80 leading-relaxed min-h-[4em] md:min-h-[3em]">
+                    {hoveredCell ? payoffExplanations[hoveredCell] : "Tap or hover over the matrix cells to analyze the mathematical consequences of each interaction."}
                   </p>
                 </div>
               </div>
@@ -230,12 +250,13 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               ].map((cell) => (
                 <div
                   key={cell.id}
+                  onClick={() => setHoveredCell(cell.id)}
                   onMouseEnter={() => setHoveredCell(cell.id)}
                   onMouseLeave={() => setHoveredCell(null)}
-                  className={`relative border border-white/5 p-4 flex flex-col justify-center items-center gap-4 cursor-crosshair transition-all duration-300 ${hoveredCell === cell.id ? 'bg-white/10 border-white/20' : 'bg-transparent'}`}
+                  className={`relative border border-white/5 p-4 md:p-6 flex flex-col justify-center items-center gap-2 md:gap-4 cursor-crosshair transition-all duration-300 ${hoveredCell === cell.id ? 'bg-white/10 border-white/20' : 'bg-transparent'}`}
                 >
                   <span className="text-white/20 uppercase tracking-widest text-[8px]">{cell.label}</span>
-                  <span className={`text-4xl font-bold ${cell.color}`}>{cell.val}</span>
+                  <span className={`text-2xl md:text-4xl font-bold ${cell.color}`}>{cell.val}</span>
                   {hoveredCell === cell.id && (
                     <motion.div
                       layoutId="cell-highlight"
@@ -246,64 +267,61 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               ))}
             </div>
 
-            {/* Matrix Labels */}
-            <div className="absolute -left-4 top-1/2 -translate-y-1/2 -rotate-90 text-[8px] font-mono text-white/20 uppercase tracking-[0.5em]">Opponent_Action</div>
-            <div className="absolute top-[-1rem] left-1/2 -translate-x-1/2 text-[8px] font-mono text-white/20 uppercase tracking-[0.5em]">Your_Action</div>
+            {/* Matrix Labels - Responsive */}
+            <div className="hidden sm:block absolute -left-4 top-1/2 -translate-y-1/2 -rotate-90 text-[8px] font-mono text-white/20 uppercase tracking-[0.5em]">Opponent_Action</div>
+            <div className="hidden sm:block absolute top-[-1rem] left-1/2 -translate-x-1/2 text-[8px] font-mono text-white/20 uppercase tracking-[0.5em]">Your_Action</div>
           </motion.div>
         </div>
       </section>
 
-      {/* Section 3: The Strategies (Horizontal Showcase) */}
-      <section className="relative h-[200vh] z-10" id="strategies-section">
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-          <div className="px-6 mb-12 max-w-6xl mx-auto w-full">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="space-y-4 bg-black/40 backdrop-blur-md p-8 rounded-3xl border border-white/10 inline-block drop-shadow-xl"
-            >
-              <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">[Behavioral_Profiles]</span>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">The Players</h2>
-            </motion.div>
-          </div>
-
+      {/* Section 3: The Players (Vertical Stack) */}
+      <section className="relative px-6 py-24 z-10 max-w-6xl mx-auto w-full">
+        <div className="mb-16">
           <motion.div
-            className="flex gap-8 px-6 md:px-[10vw]"
-            style={{
-              x: useTransform(smoothScroll, [0.4, 0.6], [0, -1200])
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-4 bg-black/40 backdrop-blur-md p-8 rounded-3xl border border-white/10 inline-block drop-shadow-xl"
           >
-            {strategies.map((strat, i) => (
-              <div
-                key={strat.id}
-                className="min-w-[300px] md:min-w-[450px] aspect-[4/5] bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl"
-              >
-                <div className="space-y-6">
-                  <div className={`w-12 h-12 ${strat.bg} flex items-center justify-center border border-white/10`}>
-                    <span className={`font-mono text-xs font-bold ${strat.color}`}>{strat.id}</span>
-                  </div>
-                  <h3 className="text-3xl font-bold tracking-tighter uppercase">{strat.name}</h3>
-                  <p className="text-white/40 text-sm leading-relaxed uppercase tracking-tight">{strat.desc}</p>
-                </div>
-
-                <div className="flex items-center gap-2 text-[8px] font-mono text-white/20 uppercase tracking-widest group-hover:text-jet-orange transition-colors">
-                  <span>Analyze_Pattern</span>
-                  <ChevronRight size={10} />
-                </div>
-              </div>
-            ))}
+            <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">[Behavioral_Profiles]</span>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">The Players</h2>
           </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {strategies.map((strat, i) => (
+            <motion.div
+              key={strat.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-black/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col justify-between group hover:border-jet-orange/50 transition-colors drop-shadow-xl rounded-2xl h-full min-h-[350px]"
+            >
+              <div className="space-y-6">
+                <div className={`w-12 h-12 ${strat.bg} flex items-center justify-center border border-white/10`}>
+                  <span className={`font-mono text-xs font-bold ${strat.color}`}>{strat.id}</span>
+                </div>
+                <h3 className="text-3xl font-bold tracking-tighter uppercase">{strat.name}</h3>
+                <p className="text-white/40 text-sm leading-relaxed uppercase tracking-tight">{strat.desc}</p>
+              </div>
+
+              <div className="flex items-center gap-2 text-[8px] font-mono text-white/20 uppercase tracking-widest group-hover:text-jet-orange transition-colors mt-8">
+                <span>Analyze_Pattern</span>
+                <ChevronRight size={10} />
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
       {/* Section 4: The Evolution */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-24 z-10">
         <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ margin: "-100px", once: true }}
           className="max-w-4xl text-center space-y-12"
-          style={{
-            opacity: useTransform(smoothScroll, [0.55, 0.65, 0.75, 0.85], [0, 1, 1, 0]),
-            y: useTransform(smoothScroll, [0.55, 0.85], [50, -50])
-          }}
         >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -317,11 +335,9 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               <Cpu className="text-white/40" size={32} />
             </div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">Evolutionary Stability</h2>
-            <p className="text-white/60 text-lg leading-relaxed">
-              Strategies aren't static. They evolve. They compete. They die.
-              In our arena, the most successful behaviors replicate, while the weak are purged.
-              Watch as "Tit-for-Tat" builds empires of trust, or "Always Defect" creates a wasteland of betrayal.
-            </p>
+            <div className="text-white/60 text-lg leading-relaxed min-h-[4.5rem]">
+              <TypewriterText text="Strategies aren't static. They evolve. They compete. They die. In our arena, the most successful behaviors replicate, while the weak are purged. Watch as 'Tit-for-Tat' builds empires of trust, or 'Always Defect' creates a wasteland of betrayal." />
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -363,24 +379,24 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] mb-8">Ready to <br />Begin?</h2>
           </div>
 
-        <div className="flex flex-col md:flex-row gap-6 mt-8">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 mt-8 w-full md:w-auto px-4 md:px-0">
           <button
             onClick={onEnter}
-            className="group relative px-12 py-5 border border-white/20 hover:border-jet-orange transition-all overflow-hidden"
+            className="group relative px-8 md:px-12 py-4 md:py-5 border border-white/20 hover:border-jet-orange transition-all overflow-hidden w-full md:w-auto"
           >
             <div className="absolute inset-0 bg-jet-orange translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm group-hover:text-white flex items-center gap-2">
-              <Cpu size={18} /> Run_Local_Simulation
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-[10px] md:text-sm group-hover:text-white flex items-center justify-center gap-2">
+              <Cpu size={16} /> Run_Local_Simulation
             </span>
           </button>
 
           <a
             href="/auth"
-            className="group relative px-12 py-5 border border-white/20 bg-white/5 hover:border-blue-500 transition-all overflow-hidden"
+            className="group relative px-8 md:px-12 py-4 md:py-5 border border-white/20 bg-white/5 hover:border-blue-500 transition-all overflow-hidden w-full md:w-auto text-center"
           >
             <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm text-white flex items-center gap-2">
-              <Shield size={18} /> Join_Multiplayer
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-[10px] md:text-sm text-white flex items-center justify-center gap-2">
+              <Shield size={16} /> Join_Multiplayer
             </span>
           </a>
 
@@ -388,9 +404,9 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
             href="https://github.com/saifanx/strategos"
             target="_blank"
             rel="noreferrer"
-            className="group relative px-12 py-5 border border-white/20 hover:border-white transition-all overflow-hidden"
+            className="group relative px-8 md:px-12 py-4 md:py-5 border border-white/20 hover:border-white transition-all overflow-hidden w-full md:w-auto text-center"
           >
-            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-sm text-white/60 group-hover:text-white transition-colors flex items-center gap-2">
+            <span className="relative z-10 font-bold uppercase tracking-[0.2em] text-[10px] md:text-sm text-white/60 group-hover:text-white transition-colors flex items-center justify-center gap-2">
               Star_Repo
             </span>
           </a>

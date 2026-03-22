@@ -10,6 +10,7 @@
 
 import type * as agents from "../agents.js";
 import type * as auth from "../auth.js";
+import type * as bots from "../bots.js";
 import type * as rooms from "../rooms.js";
 
 import type {
@@ -21,6 +22,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   agents: typeof agents;
   auth: typeof auth;
+  bots: typeof bots;
   rooms: typeof rooms;
 }>;
 

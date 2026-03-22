@@ -21,12 +21,21 @@ export default defineSchema({
   }),
   
   // Custom Multiplayer Auth Tables 
-  // TODO: Future: switch to official Auth provider (e.g. GitHub OAuth via Clerk/Convex Auth)
   users: defineTable({
     username: v.string(),
-    passwordHash: v.string(), // Or authProviderId
+    passwordHash: v.string(),
+    isBot: v.optional(v.boolean()),
+    resonance: v.optional(v.number()), // Strategic health score
   }).index("by_username", ["username"]),
   
+  leaderboard: defineTable({
+    userId: v.id("users"),
+    score: v.number(),
+    wins: v.number(),
+    totalGames: v.number(),
+    rank: v.optional(v.string()),
+  }).index("by_score", ["score"]),
+
   rooms: defineTable({
     roomName: v.string(),
     hostId: v.id("users"),
@@ -39,6 +48,7 @@ export default defineSchema({
     totalRounds: v.optional(v.number()),
     currentRound: v.optional(v.number()),
     customRules: v.optional(v.any()), // flexible object for custom game matrices/names
+    hasBots: v.optional(v.boolean()),
   }),
   
   rounds: defineTable({
@@ -47,7 +57,7 @@ export default defineSchema({
     status: v.string(), // "waiting_for_choices", "completed"
     choices: v.array(v.object({
       userId: v.id("users"),
-      choice: v.string(), // e.g., "COOPERATE", "DEFECT", or custom option
+      choice: v.string(),
     })),
   }),
 });

@@ -43,7 +43,7 @@ export function Auth() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md border border-white/10 bg-black/50 backdrop-blur-md p-8 relative overflow-hidden"
+        className="w-full max-w-md border border-white/10 bg-black/50 backdrop-blur-md p-6 md:p-8 relative overflow-hidden rounded-xl"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-jet-orange to-transparent opacity-50"></div>
         

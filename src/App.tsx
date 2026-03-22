@@ -13,6 +13,7 @@ import { About } from './pages/About';
 import { Auth } from './pages/Auth';
 import { Lobby } from './pages/Lobby';
 import { MultiplayerRoom } from './pages/MultiplayerRoom';
+import { Leaderboard } from './pages/Leaderboard';
 
 function useDocumentTitle() {
   const location = useLocation();
@@ -350,6 +351,11 @@ export default function App() {
           <Route path="/room/:id" element={
             <motion.div key="room" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
               <MultiplayerRoom />
+            </motion.div>
+          } />
+          <Route path="/leaderboard" element={
+            <motion.div key="leaderboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
+              <Leaderboard />
             </motion.div>
           } />
         </Routes>

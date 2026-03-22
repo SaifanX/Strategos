@@ -17,12 +17,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-105">
             <img src="/favicon.svg" alt="Strategos Icon" className="w-6 h-6 object-contain" />
           </div>
-          <div>
-            <h1 className="text-xl font-semibold tracking-tighter uppercase leading-none group-hover:text-jet-orange transition-colors">
+          <div className="flex flex-col">
+            <h1 className="text-lg md:text-xl font-semibold tracking-tighter uppercase leading-none group-hover:text-jet-orange transition-colors">
               Strategos
             </h1>
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">
-              Strategic Game Theory Lab - By Saifan
+            <p className="text-[8px] md:text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">
+              Game Theory Lab
             </p>
           </div>
         </Link>
@@ -53,21 +53,21 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               The_Architect
             </Link>
           )}
-          {location.pathname !== '/simulation' && (
+          {location.pathname !== '/leaderboard' && (
             <Link
-              to="/simulation"
+              to="/leaderboard"
               className="relative text-[10px] font-mono uppercase tracking-widest text-white/40 hover:text-white transition-colors duration-300 mr-4 group"
             >
-              Local_Uplink
+              Rankings
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-jet-orange transition-all duration-300 group-hover:w-full"></span>
             </Link>
           )}
           {location.pathname !== '/auth' && location.pathname !== '/lobby' && !location.pathname.startsWith('/room') && (
             <Link
               to="/auth"
-              className="px-5 py-2.5 bg-white text-black text-xs font-bold uppercase tracking-tighter hover:bg-jet-orange hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,69,0,0.5)] rounded-sm"
+              className="px-3 md:px-5 py-2 md:py-2.5 bg-white text-black text-[10px] md:text-xs font-bold uppercase tracking-tighter hover:bg-jet-orange hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,69,0,0.5)] rounded-sm whitespace-nowrap"
             >
-              Multiplayer_Hub
+              Hub
             </Link>
           )}
         </div>

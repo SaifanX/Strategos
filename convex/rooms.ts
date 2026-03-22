@@ -1,5 +1,6 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { api, internal } from "./_generated/api";
 
 export const createRoom = mutation({
   args: { 
@@ -146,6 +147,11 @@ export const makeChoice = mutation({
       status: allMadeChoices ? "completed" : "waiting_for_choices",
     });
 
+    if (!allMadeChoices && room.hasBots) {
+      // Trigger bot moves if any bots exist in the room and haven't moved yet
+      await ctx.scheduler.runAfter(1000, internal.bots.performBotMoves, { roomId: room._id, roundId: args.roundId });
+    }
+
     // Handle next round iteration
     if (allMadeChoices) {
       const currentRound = room.currentRound ?? 1;
@@ -162,9 +168,74 @@ export const makeChoice = mutation({
         });
       } else {
         await ctx.db.patch(room._id, { status: "finished" });
+        
+        // Update Leaderboard & Resonance
+        // For each human player, calculate their performance
+        const allRoomRounds = await ctx.db
+          .query("rounds")
+          .filter((q) => q.eq(q.field("roomId"), room._id))
+          .collect();
+
+        for (const playerId of room.players) {
+          const player = await ctx.db.get(playerId);
+          if (player && !player.isBot) {
+            // Simple scoring: count cooperations vs defections
+            let score = 0;
+            let wins = 0;
+            allRoomRounds.forEach(r => {
+              const c = r.choices.find(ch => ch.userId === playerId);
+              if (c?.choice === "COOPERATE") score += 5;
+              else score += 1;
+            });
+
+            // Update or Insert Leaderboard entry
+            const existingEntry = await ctx.db
+              .query("leaderboard")
+              .filter((q) => q.eq(q.field("userId"), playerId))
+              .first();
+
+            if (existingEntry) {
+              await ctx.db.patch(existingEntry._id, {
+                score: (existingEntry.score ?? 0) + score,
+                totalGames: (existingEntry.totalGames ?? 0) + 1,
+              });
+            } else {
+              await ctx.db.insert("leaderboard", {
+                userId: playerId,
+                score,
+                wins: 0,
+                totalGames: 1,
+              });
+            }
+
+            // Update Resonance
+            const newResonance = Math.min(100, (player.resonance ?? 50) + (score > 10 ? 5 : -5));
+            await ctx.db.patch(playerId, { resonance: newResonance });
+          }
+        }
       }
     }
 
     return true;
+  },
+});
+
+export const getLeaderboard = query({
+  handler: async (ctx) => {
+    const board = await ctx.db
+      .query("leaderboard")
+      .order("desc")
+      .take(10);
+    
+    return await Promise.all(
+      board.map(async (entry) => {
+        const user = await ctx.db.get(entry.userId);
+        return {
+          ...entry,
+          username: user?.username || "Unknown",
+          resonance: user?.resonance || 50,
+        };
+      })
+    );
   },
 });

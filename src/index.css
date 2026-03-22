@@ -30,3 +30,37 @@
   from { transform: translateY(-100vh); }
   to { transform: translateY(100vh); }
 }
+
+@keyframes transmission-pulse {
+  0% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.4; transform: scale(1); }
+}
+
+@keyframes slide-in-bottom {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-transmission {
+  animation: transmission-pulse 2s infinite ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slide-in-bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Progress Bar styles */
+.progress-bar-segment {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #FF4500; /* jet-orange */
+  transition: width 0.5s ease-out;
+}

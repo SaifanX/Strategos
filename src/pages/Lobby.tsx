@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'convex/react';
 // @ts-ignore
 import { api } from '../../convex/_generated/api';
-import { Users, Plus, Play, LogOut, Copy, Check } from 'lucide-react';
+import { Users, Plus, Play, LogOut, Copy, Check, Activity } from 'lucide-react';
 
 export function Lobby() {
   const navigate = useNavigate();
@@ -22,6 +22,9 @@ export function Lobby() {
   const rooms = useQuery(api.rooms.getAvailableRooms);
   const createRoom = useMutation(api.rooms.createRoom);
   const joinRoom = useMutation(api.rooms.joinRoom);
+  const addBot = useMutation(api.bots.addBotToRoom);
+
+  const [botStrategy, setBotStrategy] = useState('Tit-for-Tat');
 
   useEffect(() => {
     if (!userId) {
@@ -41,7 +44,7 @@ export function Lobby() {
       
       const roomId = await createRoom({ 
         roomName, 
-        hostId: userId,
+        hostId: userId as any,
         gameType,
         maxPlayers,
         totalRounds,
@@ -61,9 +64,8 @@ export function Lobby() {
   };
 
   const handleJoinRoom = async (roomId: string) => {
-    if (!userId) return;
     try {
-      await joinRoom({ roomId, userId });
+      await joinRoom({ roomId: roomId as any, userId: userId as any });
       navigate(`/room/${roomId}`);
     } catch (err) {
       console.error(err);
@@ -79,8 +81,8 @@ export function Lobby() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 md:p-12 h-full flex flex-col">
-      <div className="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-12 h-full flex flex-col">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 border-b border-white/10 pb-6 gap-4">
         <div>
           <div className="flex items-center gap-3 text-jet-orange mb-2">
             <Users size={24} />
@@ -88,11 +90,11 @@ export function Lobby() {
           </div>
           <p className="text-xs font-mono text-white/40 uppercase tracking-widest">Multiplayer Colosseum Area</p>
         </div>
-        <div className="text-right flex items-center gap-4">
-          <div className="text-xs font-mono text-white/60">
+        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+          <div className="text-[10px] font-mono text-white/60">
             ID: <span className="text-white font-bold">{username}</span>
           </div>
-          <button onClick={logout} className="text-white/40 hover:text-red-400 transition-colors p-2 border border-transparent hover:border-red-400/30">
+          <button onClick={logout} className="text-white/40 hover:text-red-400 transition-colors p-2 md:p-3 border border-white/10 md:border-transparent hover:border-red-400/30 rounded">
             <LogOut size={16} />
           </button>
         </div>
@@ -100,8 +102,8 @@ export function Lobby() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
-          <div className="border border-white/10 bg-black/40 backdrop-blur-xl p-8 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.03)]">
-            <h2 className="text-[10px] font-mono uppercase tracking-widest text-jet-orange mb-6 flex items-center gap-2">
+          <div className="border border-white/10 bg-black/40 backdrop-blur-xl p-6 md:p-8 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.03)]">
+            <h2 className="text-[10px] font-mono uppercase tracking-widest text-jet-orange mb-4 md:mb-6 flex items-center gap-2">
               <Plus size={14} /> Create_Arena
             </h2>
             <form onSubmit={handleCreateRoom} className="space-y-6">
@@ -168,6 +170,18 @@ export function Lobby() {
               </button>
             </form>
           </div>
+          <div className="border border-white/10 bg-black/40 backdrop-blur-xl p-6 md:p-8 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.03)] flex-1 flex flex-col min-h-[300px] mt-8 md:mt-8">
+            <h2 className="text-[10px] font-mono uppercase tracking-widest text-jet-orange mb-4 flex items-center gap-2">
+              <Activity size={14} /> Global_Intelligence_Feed
+            </h2>
+            <div className="flex-1 bg-black/60 rounded-lg p-4 font-mono text-[9px] text-white/40 space-y-2 overflow-y-auto max-h-[200px]">
+              <div>[SYSTEM]: UPLINK_ESTABLISHED...</div>
+              <div>[SYSTEM]: SCANNING_SECTORS_FOR_LIFE_SIGNS...</div>
+              <div>[INTEL]: AGENT_ALPHA_JOINED_SECTOR_01</div>
+              <div>[META]: CALIBRATING_RESONANCE_FLUX...</div>
+              <div className="text-jet-orange animate-pulse">[!] STANDBY: AWAITING_NEW_DATA_PACKETS...</div>
+            </div>
+          </div>
         </div>
 
         <div className="md:col-span-2 space-y-4">
@@ -183,14 +197,22 @@ export function Lobby() {
               <div className="text-xs font-mono text-white/20 p-4 border border-white/5 uppercase">No sectors currently awaiting combatants.</div>
             )}
             {rooms && rooms.map((room: any) => (
-              <div key={room._id} className="p-6 border border-white/10 rounded-xl hover:border-jet-orange/50 bg-black/40 backdrop-blur-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,69,0,0.1)] hover:-translate-y-1">
-                <div className="flex-1">
+              <div key={room._id} className="p-4 md:p-6 border border-white/10 rounded-xl hover:border-jet-orange/50 bg-black/40 backdrop-blur-md flex flex-col md:flex-row justify-between items-start md:items-center gap-6 md:gap-4 group transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,69,0,0.1)] hover:-translate-y-1">
+                <div className="flex-1 w-full">
                   <div className="font-bold text-lg uppercase tracking-tight mb-2 group-hover:text-jet-orange transition-colors">{room.roomName}</div>
                   <div className="flex flex-wrap items-center gap-4 text-[10px] font-mono text-white/40">
-                    <span className="flex items-center gap-1 border border-white/10 px-2 py-1 bg-black/50 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-jet-orange animate-pulse mr-1"></span> 
-                      {room.players.length}/{room.maxPlayers} JOINED
-                    </span>
+                    <div className="flex flex-col gap-1 min-w-[100px]">
+                      <div className="flex justify-between items-center text-[9px] uppercase tracking-tighter">
+                        <span>Combatants</span>
+                        <span>{room.players.length}/{room.maxPlayers}</span>
+                      </div>
+                      <div className="progress-bar-segment">
+                        <div 
+                          className="progress-bar-fill" 
+                          style={{ width: `${(room.players.length / room.maxPlayers) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
                     <span className="border border-white/10 px-2 py-1 bg-black/50 rounded">
                       {room.gameType.replace('_', ' ')}
                     </span>
@@ -198,6 +220,23 @@ export function Lobby() {
                       ROUNDS: {room.totalRounds}
                     </span>
                   </div>
+                  {room.hostId === userId && room.players.length < (room.maxPlayers ?? 2) && (
+                    <div className="flex items-center gap-2 mt-4">
+                      <select 
+                        value={botStrategy}
+                        onChange={(e) => setBotStrategy(e.target.value)}
+                        className="bg-jet-orange/10 border border-jet-orange/30 text-[9px] font-mono text-jet-orange p-1 rounded focus:outline-none"
+                      >
+                        {['Tit-for-Tat', 'Machiavelli', 'Altruist', 'Random'].map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <button 
+                        onClick={() => addBot({ roomId: room._id, strategy: botStrategy })}
+                        className="text-[9px] font-bold uppercase tracking-tighter bg-jet-orange text-white px-2 py-1 rounded hover:bg-white hover:text-black transition-all"
+                      >
+                        + INJECT_AGENT
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-3 w-full md:w-auto">
                   <button
