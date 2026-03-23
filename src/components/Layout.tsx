@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Terminal, Activity, Database, Cpu } from 'lucide-react';
+import { Schema } from './Schema';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-jet-orange selection:text-black flex flex-col">
+      <Schema />
       {/* GLOBAL NAVIGATION & FUNNEL HEADER */}
       <header className="border-b border-white/5 p-4 flex justify-between items-center bg-black/60 backdrop-blur-2xl z-50 sticky top-0 transition-all duration-300">
         <Link to="/" className="flex items-center gap-4 group">

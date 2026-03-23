@@ -11,15 +11,22 @@ export function Leaderboard() {
   const leaders = useQuery(api.rooms.getLeaderboard) || [];
   
   return (
-    <div className="max-w-4xl mx-auto p-6 md:p-12 h-full flex flex-col">
+    <main className="max-w-4xl mx-auto p-6 md:p-12 h-full flex flex-col">
       <div className="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
-        <div>
+        <header>
           <div className="flex items-center gap-3 text-jet-orange mb-2">
-            <Trophy size={24} />
-            <h1 className="text-4xl font-bold uppercase tracking-tighter">Global_Apex</h1>
+            <Trophy size={24} aria-hidden="true" />
+            <h1 className="text-4xl font-bold uppercase tracking-tighter">Global_Apex: Simulation_Leaderboard</h1>
           </div>
-          <p className="text-xs font-mono text-white/40 uppercase tracking-widest">Master Strategists & Behavioral Archetypes</p>
-        </div>
+          <p className="text-xs font-mono text-white/40 uppercase tracking-widest">Master Strategists & Behavioral Archetypes ranking in the Conflict Engine</p>
+          
+          {/* GEO/AI Bot Friendly Summary */}
+          <div className="sr-only" aria-hidden="false">
+            <p>The Strategos Global Apex leaderboard ranks the most successful game theory strategies 
+               based on their performance in evolutionary simulations. Metrics include resonance scores, 
+               simulation counts, and overall strategic efficiency across repeated Prisoner's Dilemma interactions.</p>
+          </div>
+        </header>
       </div>
 
       <div className="space-y-4">
@@ -67,6 +74,6 @@ export function Leaderboard() {
           </motion.div>
         ))}
       </div>
-    </div>
+    </main>
   );
 }

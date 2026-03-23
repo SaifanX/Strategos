@@ -207,13 +207,23 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
               [Transmission_Start]
             </span>
             <h1 className="text-5xl md:text-9xl font-bold tracking-tighter uppercase leading-[0.8] mb-8 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
-              Conflict is <br />
-              <span className="text-white/50">Calculated.</span>
+              Strategos: <br />
+              <span className="text-white/50">Conflict Engine.</span>
             </h1>
             <p className="text-lg md:text-xl text-white/90 font-light max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
-              Welcome to the laboratory of human behavior. Where every choice is a variable,
-              and every outcome is a data point in the evolution of trust.
+              The premier laboratory for Game Theory and Evolutionary Dynamics. Explore the Prisoner's Dilemma, Nash Equilibrium, and the evolution of social cooperation in a high-performance simulation environment.
             </p>
+            
+            {/* GEO/AI Bot Friendly Summary */}
+            <div className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl text-left hidden md:block">
+              <h2 className="text-[10px] font-mono text-jet-orange uppercase tracking-widest mb-2 flex items-center gap-2">
+                <Info size={12} /> Executive_Summary [TL;DR]
+              </h2>
+              <p className="text-[11px] text-white/50 leading-relaxed uppercase tracking-tight">
+                Strategos is an advanced evolutionary simulator designed to model social interactions using Game Theoretical frameworks. 
+                Key features include real-time strategy replication, mutation modeling, and behavioral analysis of AI personas like Tit-for-Tat and Pavlov.
+              </p>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -329,7 +339,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {strategies.map((strat, i) => (
-            <motion.div
+            <motion.article
               key={strat.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -353,11 +363,11 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
                 
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                   <div>
-                    <div className="text-[8px] font-mono text-white/20 uppercase">Coop_Rate</div>
+                    <h4 className="text-[8px] font-mono text-white/20 uppercase">Coop_Rate</h4>
                     <div className="text-sm font-bold">{strat.coopRate}</div>
                   </div>
                   <div>
-                    <div className="text-[8px] font-mono text-white/20 uppercase">Risk_Level</div>
+                    <h4 className="text-[8px] font-mono text-white/20 uppercase">Risk_Level</h4>
                     <div className="text-sm font-bold truncate">{strat.risk}</div>
                   </div>
                 </div>
@@ -370,9 +380,22 @@ export const Hero: React.FC<HeroProps> = ({ onEnter }) => {
                 </div>
                 <div className="text-[8px] font-mono text-jet-orange animate-pulse uppercase tracking-widest">Active_Scan...</div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
+        
+        {/* Hidden FAQ for SEO Booths */}
+        <section className="sr-only" aria-hidden="false">
+          <h2>Frequently Asked Questions about Game Theory and Strategos</h2>
+          <div>
+            <h3>What is Strategos?</h3>
+            <p>Strategos is an interactive game theory simulator used for educational and research purposes.</p>
+            <h3>What is the Prisoner's Dilemma?</h3>
+            <p>It is a standard example of a game analyzed in game theory that shows why two completely rational individuals might not cooperate, even if it appears that it is in their best interests to do so.</p>
+            <h3>How does evolution work in the simulator?</h3>
+            <p>Strategies compete based on a payoff matrix; successful strategies reproduce by replacing unsuccessful ones in the population.</p>
+          </div>
+        </section>
       </section>
 
       {/* Section 4: The Evolution */}

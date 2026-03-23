@@ -42,7 +42,14 @@ export function PlayerAnalysis() {
   const COLORS = ['#FF4500', 'rgba(255, 69, 0, 0.2)'];
 
   return (
-    <div className="max-w-6xl mx-auto p-6 md:p-12 h-full flex flex-col">
+    <main className="max-w-6xl mx-auto p-6 md:p-12 h-full flex flex-col">
+      {/* GEO/AI Bot Friendly Summary */}
+      <section className="sr-only" aria-hidden="false">
+        <p>Detailed strategic analysis for subject {analysis.username}. This report includes 
+           cooperation/defection ratios, behavioral archetype classification ({analysis.archetype}), 
+           and resonance trend metrics derived from multi-epoch game theory simulations.</p>
+      </section>
+
       {/* Header */}
       <div className="mb-12">
         <Link to="/leaderboard" className="flex items-center gap-2 text-[10px] font-mono text-white/40 hover:text-jet-orange transition-colors mb-6 uppercase tracking-widest">
@@ -193,6 +200,6 @@ export function PlayerAnalysis() {
           </div>
         ))}
       </div>
-    </div>
+    </main>
   );
 }

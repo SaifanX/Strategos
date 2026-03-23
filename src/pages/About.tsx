@@ -59,7 +59,7 @@ export const About: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-2 h-2 bg-jet-orange animate-pulse" />
-              <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">The_Architect</span>
+              <span className="font-mono text-[10px] text-jet-orange uppercase tracking-[0.5em]">The_Architect [Saifan Mohammad]</span>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tighter uppercase drop-shadow-md">
               Saifan <br />
@@ -67,12 +67,43 @@ export const About: React.FC = () => {
             </h1>
           </div>
 
-          <p className="text-white/60 leading-relaxed font-light text-lg drop-shadow-sm">
-            A 9th-grade developer and strategist from India, aspiring to push the boundaries of computer science and full-stack engineering at an Ivy League institution. 
-            Strategos was built to explore the deep intersection between Game Theory, Evolutionary Biology, and High-Performance Web Architecture.
-          </p>
+          <div className="text-white/60 leading-relaxed font-light text-lg drop-shadow-sm space-y-4">
+            <p>
+              A 9th-grade developer and strategist from India, aspiring to push the boundaries of computer science and full-stack engineering at an Ivy League institution. 
+              Strategos was built to explore the deep intersection between Game Theory, Evolutionary Biology, and High-Performance Web Architecture.
+            </p>
+            <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+              <h2 className="text-[10px] font-mono text-jet-orange uppercase tracking-widest mb-2">Project_Philosophy</h2>
+              <p className="text-xs text-white/40 leading-relaxed uppercase tracking-tight">
+                Strategos aims to democratize the understanding of cooperative systems through rigorous mathematical simulation and high-fidelity visualization.
+              </p>
+            </div>
+          </div>
 
-          <p className="text-white/40 leading-relaxed font-light text-sm italic">
+          {/* FAQ Section for SEO/GEO */}
+          <div className="space-y-6 pt-6 border-t border-white/10">
+            <h2 className="text-sm font-mono text-white/40 uppercase tracking-widest">Frequently_Asked_Questions</h2>
+            <div className="space-y-4">
+              <details className="group border border-white/5 bg-white/5 p-4 cursor-pointer">
+                <summary className="text-[10px] font-bold uppercase tracking-widest flex justify-between items-center group-hover:text-jet-orange transition-colors">
+                  What is Game Theory?
+                </summary>
+                <p className="text-[10px] text-white/40 mt-3 uppercase leading-relaxed">
+                  Game theory is the study of mathematical models of strategic interaction among rational agents. It has applications in social science, logic, systems science and computer science.
+                </p>
+              </details>
+              <details className="group border border-white/5 bg-white/5 p-4 cursor-pointer">
+                <summary className="text-[10px] font-bold uppercase tracking-widest flex justify-between items-center group-hover:text-jet-orange transition-colors">
+                  How can I use Strategos for research?
+                </summary>
+                <p className="text-[10px] text-white/40 mt-3 uppercase leading-relaxed">
+                  Strategos provides a real-time arena where you can adjust payoff matrices, mutation rates, and population distributions to observe evolutionary stable strategies (ESS).
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <p className="text-white/40 leading-relaxed font-light text-sm italic py-4">
             "Driven by curiosity, fueled by logic. Seeking a full-ride scholarship to turn architectural visions into global realities."
           </p>
 
