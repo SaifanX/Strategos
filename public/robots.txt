@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://strategos.saifan.me/sitemap.xml
+Sitemap: https://strategos1.netlify.app/sitemap.xml

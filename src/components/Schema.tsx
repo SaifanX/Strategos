@@ -5,7 +5,7 @@ export const Schema = () => {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Strategos",
-    "url": "https://strategos.saifan.me/",
+    "url": "https://strategos1.netlify.app/",
     "description": "A high-performance Game Theory Engine and Evolutionary Simulator for exploring social dynamics and strategy evolution.",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "All",
@@ -20,7 +20,7 @@ export const Schema = () => {
       "Behavioral analysis of AI personas",
       "Multiplayer strategy rooms"
     ],
-    "screenshot": "https://strategos.saifan.me/og-image.png",
+    "screenshot": "https://strategos1.netlify.app/og-image.png",
     "softwareVersion": "1.0.0"
   };
 
@@ -28,8 +28,8 @@ export const Schema = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Strategos Labs",
-    "url": "https://strategos.saifan.me/",
-    "logo": "https://strategos.saifan.me/favicon.png",
+    "url": "https://strategos1.netlify.app/",
+    "logo": "https://strategos1.netlify.app/favicon.png",
     "sameAs": [
       "https://github.com/SaifanX/Strategos"
     ]
@@ -40,7 +40,7 @@ export const Schema = () => {
     "@type": "WebSite",
     "name": "Strategos",
     "alternateName": ["Strategos Conflict Engine", "Strategos Simulator"],
-    "url": "https://strategos.saifan.me/"
+    "url": "https://strategos1.netlify.app/"
   };
 
   return (
